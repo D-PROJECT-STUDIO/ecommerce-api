@@ -22,7 +22,7 @@ This is my ecommerce backend project. I made it with Node.js, Express and MongoD
 ## Run the project
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/D-PROJECT-STUDIO/ecommerce-api.git
 cd ecommerce-api
 npm install
 ```
