@@ -9,7 +9,7 @@ const categorySchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, "Category description is required"]
+      trim: true
     },
     slug: {
       type: String,
@@ -19,5 +19,11 @@ const categorySchema = new mongoose.Schema(
   },
   { timestamps: true }
 )
+
+categorySchema.pre("validate", function () {
+  if (this.isModified("name")) {
+    this.slug = this.name.trim().toLowerCase().replace(/\s+/g, "-")
+  }
+})
 
 module.exports = mongoose.model("Category", categorySchema)

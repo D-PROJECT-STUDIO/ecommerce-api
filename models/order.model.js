@@ -5,7 +5,8 @@ const orderSchema = new mongoose.Schema(
     orderNumber: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
+      default: () => `ORD-${Date.now()}`
     },
     items: [
       {
@@ -34,12 +35,22 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
       default: "pending"
     },
     shippingAddress: {
-      type: String,
-      required: [true, "Shipping address is required"]
+      street: {
+        type: String,
+        required: [true, "Street is required"]
+      },
+      city: {
+        type: String,
+        required: [true, "City is required"]
+      },
+      country: {
+        type: String,
+        required: [true, "Country is required"]
+      }
     }
   },
   { timestamps: true }

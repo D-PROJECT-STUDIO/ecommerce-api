@@ -13,7 +13,7 @@ const errorHandler = (error, req, res, next) => {
   }
 
   if (error.code === 11000) {
-    statusCode = 400
+    statusCode = 409
     message = "This value already exists"
   }
 

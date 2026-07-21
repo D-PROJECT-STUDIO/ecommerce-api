@@ -1,5 +1,5 @@
-const Cart = require("../models/Cart")
-const Product = require("../models/Product")
+const Cart = require("../models/cart.model")
+const Product = require("../models/product.model")
 const AppError = require("../utils/AppError")
 
 const calculateTotal = (cart) => {
@@ -23,8 +23,8 @@ const getCart = async (req, res) => {
 }
 
 const addItem = async (req, res, next) => {
-  const quantity = Number(req.body.quantity || 1)
-  const product = await Product.findById(req.body.product)
+  const quantity = Number(req.body.quantity ?? 1)
+  const product = await Product.findById(req.body.productId)
 
   if (!product) {
     return next(new AppError("Product not found", 404))
@@ -87,8 +87,22 @@ const updateItem = async (req, res, next) => {
     return next(new AppError("Item not found in cart", 404))
   }
 
-  if (quantity < 1) {
-    return next(new AppError("Quantity must be at least 1", 400))
+  if (quantity < 0) {
+    return next(new AppError("Quantity cannot be negative", 400))
+  }
+
+  if (quantity === 0) {
+    cart.items = cart.items.filter((cartItem) => {
+      return cartItem.product.toString() !== req.params.productId
+    })
+    calculateTotal(cart)
+    await cart.save()
+
+    return res.status(200).json({
+      status: "success",
+      message: "Cart item removed",
+      data: cart
+    })
   }
 
   const product = await Product.findById(item.product)
