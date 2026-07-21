@@ -1,5 +1,5 @@
-const Order = require("../models/Order")
-const Cart = require("../models/Cart")
+const Order = require("../models/order.model")
+const Cart = require("../models/cart.model")
 const AppError = require("../utils/AppError")
 
 const createOrder = async (req, res, next) => {
@@ -19,7 +19,12 @@ const createOrder = async (req, res, next) => {
     }
 
     if (!item.product.inStock || item.product.stock < item.quantity) {
-      return next(new AppError(`Not enough stock for ${item.product.name}`, 400))
+      return next(
+        new AppError(
+          `Not enough stock for ${item.product.name}. Available stock: ${item.product.stock}`,
+          400
+        )
+      )
     }
   }
 
@@ -38,12 +43,10 @@ const createOrder = async (req, res, next) => {
 
   for (const item of cart.items) {
     item.product.stock -= item.quantity
-    item.product.inStock = item.product.stock > 0
     await item.product.save()
   }
 
   const order = await Order.create({
-    orderNumber: `ORD-${Date.now()}`,
     items,
     totalPrice,
     shippingAddress: req.body.shippingAddress
@@ -85,7 +88,7 @@ const getOrder = async (req, res, next) => {
 }
 
 const updateOrderStatus = async (req, res, next) => {
-  const statuses = ["pending", "processing", "shipped", "delivered", "cancelled"]
+  const statuses = ["pending", "confirmed", "shipped", "delivered", "cancelled"]
 
   if (!statuses.includes(req.body.status)) {
     return next(new AppError("Invalid order status", 400))

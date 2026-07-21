@@ -1,25 +1,30 @@
 # E-Commerce API
 
-This is my ecommerce backend project. I made it with Node.js, Express and MongoDB.
+This is a backend API for a simple e-commerce store. It manages categories, products, a shopping cart, and orders.
 
-## Features
-
-- Categories
-- Products and product search
-- Product filters
-- Shopping cart
-- Stock check
-- Orders
-- Order status
-
-## Made with
+## Tech Stack
 
 - Node.js
 - Express.js
 - MongoDB
 - Mongoose
 
-## Run the project
+## Features
+
+- Create, read, update, and delete categories
+- Create, read, update, and delete products
+- Filter and search products
+- Add, update, remove, and clear cart items
+- Check product stock before checkout
+- Create orders and update order status
+
+## Prerequisites
+
+- Node.js
+- MongoDB
+- npm
+
+## Installation
 
 ```bash
 git clone https://github.com/D-PROJECT-STUDIO/ecommerce-api.git
@@ -27,7 +32,7 @@ cd ecommerce-api
 npm install
 ```
 
-Make a `.env` file and put the same variables from `.env.example` inside it.
+Create a `.env` file using the same variables from `.env.example`.
 
 ```bash
 npm run seed
@@ -38,79 +43,97 @@ The server starts on `http://localhost:3000`.
 
 ## Environment Variables
 
-| Variable | What it is | Example |
+| Variable | Description | Example |
 | --- | --- | --- |
 | `PORT` | Server port | `3000` |
 | `NODE_ENV` | Project mode | `development` |
-| `MONGO_URI` | MongoDB URL | `mongodb://127.0.0.1:27017/ecommerce` |
+| `MONGO_URI` | MongoDB connection URL | `mongodb://127.0.0.1:27017/ecommerce` |
 
 ## API Endpoints
+
+### Categories
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | GET | `/api/categories` | Get all categories |
-| POST | `/api/categories` | Create a category |
 | GET | `/api/categories/:id` | Get one category |
+| POST | `/api/categories` | Create a category |
 | PATCH | `/api/categories/:id` | Update a category |
 | DELETE | `/api/categories/:id` | Delete a category |
+
+### Products
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
 | GET | `/api/products` | Get all products |
-| GET | `/api/products?category=:id` | Filter by category |
-| GET | `/api/products?minPrice=10&maxPrice=500` | Filter by price |
-| GET | `/api/products?inStock=true` | Get products in stock |
-| GET | `/api/products?search=phone` | Search products |
+| GET | `/api/products/:id` | Get one product with its category |
 | POST | `/api/products` | Create a product |
-| GET | `/api/products/:id` | Get one product |
 | PATCH | `/api/products/:id` | Update a product |
 | DELETE | `/api/products/:id` | Delete a product |
+
+Product filters can be combined:
+
+- `/api/products?category=:id`
+- `/api/products?minPrice=10&maxPrice=500`
+- `/api/products?inStock=true`
+- `/api/products?search=phone`
+
+### Cart
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
 | GET | `/api/cart` | Get the cart |
-| POST | `/api/cart` | Add an item to the cart |
-| PATCH | `/api/cart/:productId` | Change item quantity |
-| DELETE | `/api/cart/:productId` | Remove one item |
+| POST | `/api/cart/items` | Add a product to the cart |
+| PATCH | `/api/cart/items/:productId` | Change an item quantity |
+| DELETE | `/api/cart/items/:productId` | Remove an item |
 | DELETE | `/api/cart` | Clear the cart |
+
+### Orders
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
 | GET | `/api/orders` | Get all orders |
 | POST | `/api/orders` | Checkout the cart |
 | GET | `/api/orders/:id` | Get one order |
 | PATCH | `/api/orders/:id/status` | Update order status |
 
-## Filters
-
-I can filter products by `category`, `minPrice`, `maxPrice`, `inStock=true` or `search`.
-
 ## Folder Structure
 
 ```text
 ecommerce-api/
-├── config/
-├── controllers/
-│   ├── cartController.js
-│   ├── categoryController.js
-│   ├── orderController.js
-│   └── productController.js
-├── db/
-│   └── connectDB.js
-├── middleware/
-│   ├── asyncHandler.js
-│   └── errorHandler.js
-├── models/
-│   ├── Cart.js
-│   ├── Category.js
-│   ├── Order.js
-│   └── Product.js
-├── postman/
-├── routes/
-│   ├── cartRoutes.js
-│   ├── categoryRoutes.js
-│   ├── orderRoutes.js
-│   └── productRoutes.js
-├── utils/
-│   └── AppError.js
-├── .env.example
-├── .gitignore
-├── app.js
-├── package.json
-└── seed.js
+|-- config/
+|-- controllers/
+|-- db/
+|-- middleware/
+|-- models/
+|   |-- cart.model.js
+|   |-- category.model.js
+|   |-- order.model.js
+|   `-- product.model.js
+|-- postman/
+|-- routes/
+|-- utils/
+|-- .env.example
+|-- .gitignore
+|-- app.js
+|-- package.json
+`-- seed.js
 ```
+
+- `config` holds project configuration files.
+- `controllers` contains the API logic.
+- `db` contains the MongoDB connection.
+- `middleware` contains the central error handler.
+- `models` contains the Mongoose schemas.
+- `postman` contains the exported collection and environment.
+- `routes` contains the API routes.
+- `utils` contains reusable error helpers.
 
 ## Postman
 
-I put the collection and environment files in the `postman` folder. Import both files and select `E-Commerce API Dev`.
+Import these two files from the `postman` folder:
+
+- `ecommerce-api.postman_collection.json`
+- `E-Commerce API Dev.postman_environment.json`
+
+Select the `E-Commerce API Dev` environment before running the requests.

@@ -1,4 +1,4 @@
-const Category = require("../models/Category")
+const Category = require("../models/category.model")
 const AppError = require("../utils/AppError")
 
 const getCategories = async (req, res) => {
@@ -36,6 +36,10 @@ const createCategory = async (req, res) => {
 }
 
 const updateCategory = async (req, res, next) => {
+  if (req.body.name) {
+    req.body.slug = req.body.name.trim().toLowerCase().replace(/\s+/g, "-")
+  }
+
   const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true

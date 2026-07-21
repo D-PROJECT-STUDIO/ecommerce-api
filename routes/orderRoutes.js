@@ -1,5 +1,5 @@
 const express = require("express")
-const asyncHandler = require("../middleware/asyncHandler")
+const asyncHandler = require("../utils/asyncHandler")
 const orderController = require("../controllers/orderController")
 
 const router = express.Router()

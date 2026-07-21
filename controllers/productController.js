@@ -1,5 +1,5 @@
-const Product = require("../models/Product")
-const Category = require("../models/Category")
+const Product = require("../models/product.model")
+const Category = require("../models/category.model")
 const AppError = require("../utils/AppError")
 
 const getProducts = async (req, res) => {
@@ -22,7 +22,7 @@ const getProducts = async (req, res) => {
   }
 
   if (req.query.inStock === "true") {
-    filter.inStock = true
+    filter.stock = { $gt: 0 }
   }
 
   if (req.query.search) {
